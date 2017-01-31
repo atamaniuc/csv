@@ -17,7 +17,9 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 		$directoryIterator     = $recursive
 			? new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $directory ) )
 			: new DirectoryIterator( $directory );
-		$filesWithDeletedLines = [];
+		$filesWithDeletedRows = [];
+		// the number of rows found
+		$matches = 0;
 		// loop trough directory items
 		foreach ( $directoryIterator as $file ) {
 			// skipping folders and unnecessary file extensions
@@ -26,8 +28,6 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 			}
 			// open csv-file as array
 			$lines = file( $file->getPathname(), FILE_IGNORE_NEW_LINES );
-			// the number of lines found
-			$matches = 0;
 			// loop trough lines
 			foreach ( $lines as $index => $line ) {
 				$rows = str_getcsv( $line );
@@ -35,7 +35,7 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 				if ( isset( $rows[1], $rows[4] ) && $rows[1] === $secondColumnValue && $rows[4] === $fifthColumnValue ) {
 					unset( $lines[ $index ] );
 					$matches ++;
-					$filesWithDeletedLines[] = $file->getPathname();
+					$filesWithDeletedRows[] = $file->getPathname();
 				}
 			}
 			// Rewrite the file if values has been successfully searched
@@ -44,9 +44,11 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 			}
 		}
 		// print list of files with deleted liens
-		if ( count( $filesWithDeletedLines ) ) {
-			$filesWithDeletedLines = implode( "\n", array_unique( $filesWithDeletedLines ) );
-			echo "Lines from files: \n" . $filesWithDeletedLines . "\nhas been deleted !";
+		if ( count( $filesWithDeletedRows ) ) {
+			$filesWithDeletedRows = implode( "\n", array_unique( $filesWithDeletedRows ) );
+			echo "{$matches} rows from files: \n\n" . $filesWithDeletedRows . "\n\nhas been deleted !";
+		} else {
+			echo "rows with --second_column_value={$secondColumnValue} and --fifth_column_value={$fifthColumnValue} wasn't found.";
 		}
 	}
 } else { // no arguments were provided - print script usage info
