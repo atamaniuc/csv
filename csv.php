@@ -32,7 +32,7 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 			foreach ( $lines as $index => $line ) {
 				$rows = str_getcsv( $line );
 				// delete lines by selected criteria
-				if ( isset( $rows[1], $rows['4'] ) && $rows[1] === $secondColumnValue && $rows['4'] === $fifthColumnValue ) {
+				if ( isset( $rows[1], $rows[4] ) && $rows[1] === $secondColumnValue && $rows[4] === $fifthColumnValue ) {
 					unset( $lines[ $index ] );
 					$matches ++;
 					$filesWithDeletedLines[] = $file->getPathname();
@@ -87,8 +87,8 @@ function getArgumentValueByName( $argumentName, array $argv ) {
 					case 'recursive':
 						$argumentValue = $argumentValue === 'true';
 						break;
-					case 'first_value':
-					case 'second_value':
+					case 'second_column_value':
+					case 'fifth_column_value':
 						$argumentValue = $argumentValue ?: '';
 						break;
 				}
