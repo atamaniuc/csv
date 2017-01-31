@@ -25,7 +25,7 @@ if ( count( $argv ) > 1 ) { // arguments were provided
 				continue;
 			}
 			// open csv-file as array
-			$lines = file( $file->getPathname(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+			$lines = file( $file->getPathname(), FILE_IGNORE_NEW_LINES );
 			// the number of lines found
 			$matches = 0;
 			// loop trough lines
